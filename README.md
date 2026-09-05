@@ -12,7 +12,7 @@ Merchants on Razorpay lose **recoverable revenue** because payment failures (sub
 
 This agent:
 1. **Ingests** failure events from Razorpay webhooks
-2. **Diagnoses** the root cause using a Gemini LLM (read-only, advisory)
+2. **Diagnoses** the root cause using an LLM (read-only, advisory)
 3. **Decides** a bounded recovery action using deterministic policy rules (NO LLM here)
 4. **Executes** the action with full idempotency guarantees
 5. **Reports** recovered revenue with a complete audit trail
@@ -20,6 +20,8 @@ This agent:
 ---
 
 ## Architecture
+
+![High-Level Design Diagram](https://raw.githubusercontent.com/krishsingh120/ExecHub-HLD-Image/refs/heads/main/Razorpay-buildathon-Design.png)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -38,7 +40,7 @@ This agent:
                                ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                  2. DIAGNOSIS SERVICE (Python FastAPI)                   │
-│  POST /diagnose → Gemini LLM (read-only, advisory)                      │
+│  POST /diagnose → LLM (read-only, advisory)                             │
 │  → One of 8 fixed categories + confidence score + evidence string       │
 │  → Pydantic v2 validation; invalid output → unknown_low_confidence      │
 └──────────────────────────────┬──────────────────────────────────────────┘
@@ -106,7 +108,7 @@ cd ..
 cp .env.example .env
 # Edit .env and add your real credentials:
 #   RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET
-#   GOOGLE_API_KEY (for Gemini LLM)
+#   GOOGLE_API_KEY / GROQ_API_KEY (for the diagnosis LLM)
 #   TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER
 ```
 
@@ -198,7 +200,7 @@ npm run reconcile
 |------|--------|-------|
 | Razorpay API calls | Real SDK, untested end-to-end | Keys not available yet; add to `.env` to activate |
 | Twilio SMS | Real SDK, untested end-to-end | Keys not available yet; add to `.env` to activate |
-| Gemini LLM | Real API, requires `GOOGLE_API_KEY` | Falls back to `unknown_low_confidence` if key missing |
+| Diagnosis LLM | Real API, requires an API key | Falls back to `unknown_low_confidence` if key missing |
 | Queue | In-memory | Resets on server restart; use Redis for production |
 | Database | SQLite | Good for prototype; use PostgreSQL for production |
 | Retry scheduling | Synchronous | Real retries would use a job queue (Bull/BullMQ) with time-delay |
@@ -213,7 +215,7 @@ npm run reconcile
 /
 ├── shared/                  # Shared TypeScript types
 ├── ingestion/               # Express webhook server
-├── diagnosis/               # Python FastAPI + Gemini LLM classifier
+├── diagnosis/               # Python FastAPI + LLM classifier
 ├── policy/                  # Deterministic policy engine
 ├── executor/                # Action executor + reconciliation
 ├── audit/                   # SQLite schema + report generator
