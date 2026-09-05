@@ -231,5 +231,6 @@ export function generateSyntheticBatch(): Array<{ eventId: string; payload: Razo
   }
 
   console.log(`[generateEvents] Generated ${events.length} synthetic events (including 1 duplicate)`);
+  events.sort(() => Math.random() - 0.5);
   return events;
 }

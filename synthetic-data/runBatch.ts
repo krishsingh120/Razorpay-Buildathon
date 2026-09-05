@@ -36,9 +36,9 @@ async function runBatch(): Promise<void> {
   // Run reconciliation sweep to clean up any stuck records from previous runs
   reconcileStuckPending();
 
-  // Generate all events (full batch)
-  const rawEvents = generateSyntheticBatch();
-  console.log(`\n[batch] Processing ${rawEvents.length} events (this will take a while due to 13s delay for rate limits)...\n`);
+  // Generate 20 random events
+  const rawEvents = generateSyntheticBatch().slice(0, 20);
+  console.log(`\n[batch] Processing ${rawEvents.length} events (5s delay between events)...\n`);
 
   let processed = 0;
   let skipped = 0;
@@ -62,8 +62,8 @@ async function runBatch(): Promise<void> {
       processed++;
 
       // 13-second delay between events to avoid overwhelming the diagnosis service and hitting the 5 req/min Gemini rate limit
-      console.log(`[batch] Sleeping 13 seconds to respect rate limits...`);
-      await new Promise(resolve => setTimeout(resolve, 13000));
+      console.log(`[batch] Sleeping 5 seconds...`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(`[batch] Error processing event ${eventId}: ${msg}`);

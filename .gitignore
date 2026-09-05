@@ -16,3 +16,5 @@ audit/*.db
 audit/*.db-wal
 audit/*.db-shm
 .env
+Note.md
+scripts.txt
