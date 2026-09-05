@@ -1,0 +1,61 @@
+{
+  "entity": "event",
+  "account_id": "acc_test_buildathon",
+  "event": "payment.failed",
+  "contains": [
+    "payment",
+    "subscription"
+  ],
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_test_c3c9ebc55e434f",
+        "entity": "payment",
+        "amount": 49900,
+        "currency": "INR",
+        "status": "failed",
+        "order_id": "order_test_c72a6ddb89a84c",
+        "invoice_id": null,
+        "subscription_id": "sub_test_3096a331197845",
+        "international": false,
+        "method": "card",
+        "amount_refunded": 0,
+        "captured": false,
+        "description": "Monthly Pro subscription payment",
+        "card_id": "card_test_c62e7a278e5944",
+        "bank": "HDFC",
+        "wallet": null,
+        "vpa": null,
+        "email": "testuser@example.com",
+        "contact": "+919876543210",
+        "customer_id": "cust_test_4a27eb9c41cd",
+        "token_id": "token_test_0f36152709ca40",
+        "notes": {
+          "attempt_count": "1"
+        },
+        "error_code": "BAD_REQUEST_ERROR",
+        "error_description": "Your payment failed due to insufficient funds in your account.",
+        "error_source": "bank",
+        "error_step": "payment_authorization",
+        "error_reason": "payment_failed",
+        "created_at": 1788539797
+      }
+    },
+    "subscription": {
+      "entity": {
+        "id": "sub_test_3096a331197845",
+        "entity": "subscription",
+        "plan_id": "plan_test_ceb4f4395b1e42",
+        "status": "halted",
+        "current_start": 1785947797,
+        "current_end": 1788539797,
+        "charge_at": 1788539797,
+        "customer_id": "cust_test_4a27eb9c41cd",
+        "total_count": 12,
+        "paid_count": 3,
+        "remaining_count": 9
+      }
+    }
+  },
+  "created_at": 1788539797
+}
